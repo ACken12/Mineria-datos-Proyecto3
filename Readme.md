@@ -5,3 +5,12 @@ Asegúrate de tener instaladas las bibliotecas necesarias. Las más comunes para
 ```bash
 pip install pandas numpy
 ```
+
+Además de tener instáladas las siguientes bibliotecas:
+
+```bash
+# En Windows, a veces necesitas usar python -m pip
+python -m pip install requests
+python -m pip install pandas
+pip install scikit-learn
+```
