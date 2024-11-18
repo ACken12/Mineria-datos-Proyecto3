@@ -14,3 +14,19 @@ python -m pip install requests
 python -m pip install pandas
 pip install scikit-learn
 ```
+
+Para los graficos y diversos calculos
+```bash
+pip install seaborn matplotlib scipy
+```
+
+
+pip install pandas numpy seaborn matplotlib
+
+Para la 3 y 4
+
+seaborn
+
+matplotlib
+
+scipy
