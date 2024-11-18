@@ -17,6 +17,9 @@ pip install scikit-learn
 
 > ![TIP]
 
-Consejo puedes leer este pdf con todos los trucos de github
-[Consejo puedes leer este pdf con todos los trucos de github](/github-Trucos.pdf)
+<div style="background-color: #e6f7e6; padding: 10px; border-radius: 5px; border-left: 5px solid #4caf50;">
+  <strong>💡 Tip:</strong> Consejo puedes leer este pdf con todos los trucos de github
+  [](/github-Trucos.pdf)
+
+</div>
 
