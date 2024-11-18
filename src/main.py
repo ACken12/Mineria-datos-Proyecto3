@@ -1,5 +1,6 @@
 from services.data_loader import load_and_clean_dataset
-from analysis import perform_analysis
+from visualizations.analysis import perform_analysis
+
 
 def main():
     url = "https://github.com/ACken12/Mineria-datos-Proyecto3/blob/main/csv/datos.csv"
