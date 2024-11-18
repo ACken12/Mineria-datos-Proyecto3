@@ -1,8 +1,9 @@
 import pandas as pd
 import numpy as np
 from sklearn.preprocessing import LabelEncoder
+from analysis import univariate_analysis, bivariate_analysis
 import warnings
-
+from analysis import InteractiveVisualizer
 def load_and_clean_dataset(url):
     """
     Lee un archivo CSV desde GitHub y realiza una limpieza completa de los datos.
@@ -96,6 +97,8 @@ def load_and_clean_dataset(url):
                 label_encoders[col] = LabelEncoder()
                 df[col] = label_encoders[col].fit_transform(df[col])
                 print("  Valores codificados:", np.unique(df[col]))
+
+        
         
         # 8. Mostrar información final
         print("\n=== Información final del dataset ===")
@@ -104,6 +107,8 @@ def load_and_clean_dataset(url):
         print(df.dtypes)
         print("\nValores nulos restantes:")
         print(df.isnull().sum())
+        visualizer = InteractiveVisualizer(df)
+        visualizer.show() 
         
         return df, df_original, label_encoders
         
