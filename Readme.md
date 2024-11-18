@@ -33,3 +33,6 @@ pip install pandas numpy seaborn matplotlib
 - seaborn
 - matplotlib
 - scipy
+
+> [!IMPORTANT]
+> Realizar un pull para obtener todos los cambios realizados
