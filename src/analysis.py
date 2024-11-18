@@ -30,23 +30,6 @@ def univariate_analysis(df):
             sns.histplot(data=df, x=col, kde=True)
             plt.title(f"Distribución de {col}")
             plt.show()
-    
-    # Análisis de variables categóricas
-    categorical_cols = df.select_dtypes(exclude=[np.number]).columns
-    if len(categorical_cols) > 0:
-        print("\nVariables Categóricas:")
-        for col in categorical_cols:
-            print(f"\nDistribución de frecuencias para {col}:")
-            freq = df[col].value_counts()
-            print(freq)
-            print(f"Número de categorías únicas: {df[col].nunique()}")
-            
-            # Crear y mostrar gráfico de barras
-            plt.figure(figsize=(10, 6))
-            sns.countplot(data=df, x=col)
-            plt.xticks(rotation=45)
-            plt.title(f"Distribución de {col}")
-            plt.show()
 
 def bivariate_analysis(df):
     """
@@ -55,7 +38,6 @@ def bivariate_analysis(df):
     print("\n=== Análisis Bivariado ===")
     
     numerical_cols = df.select_dtypes(include=[np.number]).columns
-    categorical_cols = df.select_dtypes(exclude=[np.number]).columns
     
     # Correlaciones entre variables numéricas
     if len(numerical_cols) > 1:
@@ -91,6 +73,34 @@ def bivariate_analysis(df):
                 plt.title(f"Scatter plot: {var1} vs {var2}")
                 plt.show()
 
+    # Análisis específico de variables categóricas vs numéricas
+    print("\nAnálisis de variables categóricas vs numéricas específicas:")
+    plt.figure(figsize=(12, 15))
+    
+    # Boxplot de 'totaldayminutes' por 'churn'
+    plt.subplot(3, 1, 1)
+    sns.boxplot(x='churn', y='totaldayminutes', data=df)
+    plt.title('Distribución de Total Day Minutes por Churn')
+    plt.xlabel('Churn')
+    plt.ylabel('Total Day Minutes')
+    
+    # Boxplot de 'totalintlminutes' por 'internationalplan'
+    plt.subplot(3, 1, 2)
+    sns.boxplot(x='internationalplan', y='totalintlminutes', data=df)
+    plt.title('Distribución de Total Intl Minutes por International Plan')
+    plt.xlabel('International Plan')
+    plt.ylabel('Total Intl Minutes')
+    
+    # Boxplot de 'numbervmailmessages' por 'voicemailplan'
+    plt.subplot(3, 1, 3)
+    sns.boxplot(x='voicemailplan', y='numbervmailmessages', data=df)
+    plt.title('Distribución de Number Vmail Messages por Voicemail Plan')
+    plt.xlabel('Voicemail Plan')
+    plt.ylabel('Number Vmail Messages')
+    
+    plt.tight_layout()
+    plt.show()
+
 class InteractiveVisualizer:
     def __init__(self, df):
         self.df = df
@@ -111,7 +121,6 @@ class InteractiveVisualizer:
         """Prepara los datos para todas las secciones de gráficos."""
         # Preparar listas para cada tipo de gráfico
         columnas_numericas = self.df.select_dtypes(include=[np.number]).columns
-        columnas_categoricas = self.df.select_dtypes(include=['object', 'category']).columns
         
         # Datos para histogramas
         self.histogram_data = [{'data': self.df, 'column': col} 
@@ -131,20 +140,20 @@ class InteractiveVisualizer:
                     'y': columnas_numericas[j]
                 })
         
-        # Datos para boxplots por categoría
-        self.category_boxplot_data = []
-        for cat_col in columnas_categoricas:
-            for num_col in columnas_numericas:
-                self.category_boxplot_data.append({
-                    'data': self.df,
-                    'category': cat_col,
-                    'numeric': num_col
-                })
+        # Datos específicos para boxplots por categoría
+        self.category_boxplot_data = [
+            {'data': self.df, 'category': 'churn', 'numeric': 'totaldayminutes',
+             'title': 'Distribución de Total Day Minutes por Churn'},
+            {'data': self.df, 'category': 'internationalplan', 'numeric': 'totalintlminutes',
+             'title': 'Distribución de Total Intl Minutes por International Plan'},
+            {'data': self.df, 'category': 'voicemailplan', 'numeric': 'numbervmailmessages',
+             'title': 'Distribución de Number Vmail Messages por Voicemail Plan'}
+        ]
         
         # Lista de todas las secciones y sus títulos
         self.sections = [
-            (self.histogram_data, "Histogramas", self.plot_histogram),
-            (self.boxplot_data, "Boxplots", self.plot_boxplot),
+            (self.histogram_data, "Histogramas de Distribución", self.plot_histogram),
+            (self.boxplot_data, "Boxplots de Distribución", self.plot_boxplot),
             (self.scatter_data, "Gráficos de Dispersión", self.plot_scatter),
             (self.category_boxplot_data, "Boxplots por Categoría", self.plot_category_boxplot)
         ]
@@ -187,7 +196,7 @@ class InteractiveVisualizer:
         """Dibuja un boxplot por categoría."""
         sns.boxplot(data=data['data'], x=data['category'], y=data['numeric'],
                    palette='Set3', ax=ax)
-        ax.set_title(f"{data['numeric']} por {data['category']}")
+        ax.set_title(data['title'])
         plt.setp(ax.xaxis.get_majorticklabels(), rotation=45)
     
     def plot_current_view(self):
