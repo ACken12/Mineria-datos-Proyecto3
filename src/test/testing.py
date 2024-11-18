@@ -1,3 +1,6 @@
+
+from services.data_loader import load_and_clean_dataset
+from visualizations.analysis import perform_analysis
 import numpy as np
 import pandas as pd
 import seaborn as sns
@@ -61,7 +64,9 @@ def analyze_outliers(df):
         
         plt.tight_layout()
         plt.show()
-    
-    return outliers_summary
-    
 
+
+url = "https://github.com/ACken12/Mineria-datos-Proyecto3/blob/main/csv/datos.csv"
+df_limpio, df_original, encoders = load_and_clean_dataset(url)
+
+analyze_outliers(df_limpio);
