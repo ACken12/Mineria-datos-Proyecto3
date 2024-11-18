@@ -1,17 +1,14 @@
 import numpy as np
 import pandas as pd
-import seaborn as sns
 import matplotlib.pyplot as plt
 from scipy import stats
 
 def analyze_outliers(df):
     """
     Realiza análisis de outliers utilizando métodos Z-score e IQR.
-    Se integra con el análisis exploratorio existente.
+    Devuelve un resumen de los outliers detectados en cada columna numérica y grafica resultados clave.
     """
-    print("\n=== Análisis de Valores Atípicos (Outliers) ===")
-    
-    numerical_cols = df.select_dtypes(include=[np.number]).columns # Solo incluimos los valores númericos
+    numerical_cols = df.select_dtypes(include=[np.number]).columns  # Solo valores numéricos
     outliers_summary = {}
     
     for column in numerical_cols:
@@ -36,32 +33,24 @@ def analyze_outliers(df):
             'bounds': {'lower': lower_bound, 'upper': upper_bound}
         }
         
-        # Imprimir resultados
-        print(f"\nAnálisis de outliers para {column}:")
-        print(f"Método IQR (1.5 * IQR):")
-        print(f"- Límite inferior: {lower_bound:.2f}")
-        print(f"- Límite superior: {upper_bound:.2f}")
-        print(f"- Número de outliers: {len(outliers_iqr)}")
-        print(f"\nMétodo Z-score (|z| > 3):")
-        print(f"- Número de outliers: {len(outliers_zscore)}")
+        # Graficar resultados
+        plt.figure(figsize=(12, 6))
         
-        # Crear visualizaciones
-        fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(15, 5))
+        # Boxplot con límites
+        plt.subplot(1, 2, 1)
+        plt.boxplot(df[column], vert=False, patch_artist=True)
+        plt.axvline(lower_bound, color='red', linestyle='--', label='Límite Inferior (IQR)')
+        plt.axvline(upper_bound, color='green', linestyle='--', label='Límite Superior (IQR)')
+        plt.title(f'Boxplot de {column}')
+        plt.legend()
         
-        # Boxplot
-        sns.boxplot(y=df[column], ax=ax1)
-        ax1.set_title(f'Boxplot de {column}')
-        
-        # Scatter plot con límites IQR
-        sns.scatterplot(data=df.reset_index(), x='index', y=column, ax=ax2)
-        ax2.axhline(y=upper_bound, color='r', linestyle='--', label='Límite Superior IQR')
-        ax2.axhline(y=lower_bound, color='r', linestyle='--', label='Límite Inferior IQR')
-        ax2.set_title(f'Scatter plot de {column} con límites IQR')
-        ax2.legend()
+        # Conteo de outliers
+        plt.subplot(1, 2, 2)
+        plt.bar(['IQR', 'Z-score'], [len(outliers_iqr), len(outliers_zscore)], color=['blue', 'orange'])
+        plt.title(f'Conteo de outliers en {column}')
+        plt.ylabel('Cantidad')
         
         plt.tight_layout()
         plt.show()
     
     return outliers_summary
-    
-

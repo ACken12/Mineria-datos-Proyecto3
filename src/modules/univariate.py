@@ -1,59 +1,50 @@
 import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
+from ipywidgets import widgets, interact
+
+ 
+
 
 def univariate_analysis(df):
     """
-    Realiza análisis univariado del DataFrame, detecta sesgo y aplica transformaciones si es necesario.
+    Realiza análisis univariado del DataFrame con navegación paginada entre gráficos.
     """
     print("\n=== Análisis Univariado ===")
+    figures = []  # Lista para almacenar las figuras
     
     # Análisis de variables numéricas
     numerical_cols = df.select_dtypes(include=[np.number]).columns
     if len(numerical_cols) > 0:
-        print("\nVariables Numéricas:")
         for col in numerical_cols:
-            print(f"\nEstadísticas para {col}:")
-            stats = df[col].describe()
-            print(stats)
+            # Crear histograma
+            fig1, ax1 = plt.subplots(figsize=(10, 6))
+            sns.histplot(data=df, x=col, kde=True, ax=ax1)
+            ax1.set_title(f"Distribución de {col}")
+            figures.append(fig1)
             
-            # Detectar asimetría y curtosis
-            skewness = df[col].skew()
-            kurtosis = df[col].kurtosis()
-            print(f"Asimetría: {skewness:.2f}")
-            print(f"Curtosis: {kurtosis:.2f}")
-            
-            # Comprobar sesgo y aplicar transformaciones si es necesario
-            if abs(skewness) > 1:  # Sesgo alto, aplicar transformación
-                print(f"Transformación aplicada a {col}: Logaritmo")
-                df[col] = np.log1p(df[col])  # Aplicar logaritmo (log(1 + x))
-                print(f"Nuevo sesgo para {col}: {df[col].skew():.2f}")
-            
-            # Crear y mostrar histograma
-            plt.figure(figsize=(10, 6))
-            sns.histplot(data=df, x=col, kde=True)
-            plt.title(f"Distribución de {col}")
-            plt.show()
-            
-            # Crear y mostrar diagrama de caja
-            plt.figure(figsize=(10, 6))
-            sns.boxplot(data=df, x=col)
-            plt.title(f"Diagrama de caja de {col}")
-            plt.show()
+            # Crear diagrama de caja
+            fig2, ax2 = plt.subplots(figsize=(10, 6))
+            sns.boxplot(data=df, x=col, ax=ax2)
+            ax2.set_title(f"Diagrama de caja de {col}")
+            figures.append(fig2)
     
     # Análisis de variables categóricas
     categorical_cols = df.select_dtypes(exclude=[np.number]).columns
     if len(categorical_cols) > 0:
-        print("\nVariables Categóricas:")
         for col in categorical_cols:
-            print(f"\nDistribución de frecuencias para {col}:")
-            freq = df[col].value_counts()
-            print(freq)
-            print(f"Número de categorías únicas: {df[col].nunique()}")
-            
-            # Crear y mostrar gráfico de barras
-            plt.figure(figsize=(10, 6))
-            sns.countplot(data=df, x=col)
+            # Crear gráfico de barras
+            fig, ax = plt.subplots(figsize=(10, 6))
+            sns.countplot(data=df, x=col, ax=ax)
+            ax.set_title(f"Distribución de {col}")
             plt.xticks(rotation=45)
-            plt.title(f"Distribución de {col}")
-            plt.show()
+            figures.append(fig)
+    
+    # Función para mostrar una figura específica
+    def display_figure(index):
+        for fig in figures:  # Cerrar todas las figuras anteriores
+            plt.close(fig)
+        figures[index].show()  # Mostrar figura seleccionada
+    
+    # Crear slider interactivo
+    interact(display_figure, index=widgets.IntSlider(min=0, max=len(figures) - 1, step=1, description="Página"))
