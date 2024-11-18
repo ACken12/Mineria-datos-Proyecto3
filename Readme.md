@@ -15,7 +15,7 @@ python -m pip install pandas
 pip install scikit-learn
 ```
 
-> [!TIP]
+> ![TIP]
 
 Consejo puedes leer este pdf con todos los trucos de github
 [Consejo puedes leer este pdf con todos los trucos de github](/github-Trucos.pdf)
