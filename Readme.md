@@ -18,3 +18,5 @@ pip install scikit-learn
 > [!TIP]
 
 Consejo puedes leer este pdf con todos los trucos de github
+[Consejo puedes leer este pdf con todos los trucos de github](/github-Trucos.pdf)
+
