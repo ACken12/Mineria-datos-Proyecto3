@@ -1,7 +1,5 @@
 ## Configuración
 
-> [!TIP]
-> Optional information to help a user be more successful.
 
 Asegúrate de tener instaladas las bibliotecas necesarias. Las más comunes para EDA son pandas y numpy. Si no las tienes, instálalas con:
 
@@ -17,9 +15,11 @@ python -m pip install requests
 python -m pip install pandas
 pip install scikit-learn
 ```
+> [!TIP]
+> [Consejo puedes leer este pdf con todos los trucos de github](/github-Trucos.pdf)
 
-> .[!TIP].
-  [Consejo puedes leer este pdf con todos los trucos de github](/github-Trucos.pdf)
+
+
 
 
 
