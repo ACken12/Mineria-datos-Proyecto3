@@ -14,3 +14,7 @@ python -m pip install requests
 python -m pip install pandas
 pip install scikit-learn
 ```
+
+> [!TIP]
+
+Consejo puedes leer este pdf con todos los trucos de github
