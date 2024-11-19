@@ -10,13 +10,14 @@ from classes.VisualizerData import InteractiveVisualizer
 def perform_analysis(df):
     """Realiza el análisis exploratorio completo con visualizaciones interactivas."""
     print("\n=== Iniciando Análisis Exploratorio de Datos ===")
-    
+    """
     print("\nAnálisis univariado:")
     univariate_analysis(df)
-    """"
+    """
     print("\nAnálisis bivariado:")
     bivariate_analysis(df)
     
+    """"
  
     # Análisis de outliers
     print("\n=== Resumen de Outliers ===")
