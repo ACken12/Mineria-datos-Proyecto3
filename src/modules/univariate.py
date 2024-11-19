@@ -3,6 +3,7 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 from visualizations.botsplox import firtsbox,secondbox
 from visualizations.histograms import firtshist,secondhist
+from visualizations.barplots import first_bar,second_bar
 
 
 def univariate_analysis(df):
@@ -35,28 +36,24 @@ def univariate_analysis(df):
       
         secondbox(second_half,df)
 
-
+   
+   
     # Análisis de variables categóricas
-    categorical_cols = df.select_dtypes(include=[np.number]).columns
+    categorical_cols = df.select_dtypes(include=['category']).columns  # Seleccionamos columnas categóricas
     if len(categorical_cols) > 0:
-        print("\nPágina 3: Gráficos de Barras")
+        print("\nPágina 3: Gráficos de Barras (Primera Parte)")
         
-        # Configuración del grid (3 gráficos por fila)
-        rows = (len(categorical_cols) + 2) // 3
-        fig, axes = plt.subplots(rows, 3, figsize=(18, 6 * rows))
-        axes = axes.flatten()
+        # Dividimos las columnas en dos partes
+        half = len(categorical_cols) // 2  # Dividimos por la mitad
+        first_half = categorical_cols[:half]  # Primera mitad
+        second_half = categorical_cols[half:]  # Segunda mitad
         
-        # Crear gráficos de barras
-        for i, col in enumerate(categorical_cols):
-            sns.countplot(data=df, x=col, ax=axes[i])
-            axes[i].set_title(f"Diagrama de caja de {col}")
+        first_bar(first_half,df)
         
-        # Ocultar ejes adicionales si hay menos gráficos que celdas
-        for j in range(i + 1, len(axes)):
-            axes[j].axis("off")
+        print("\nPágina 3: Gráficos de Barras (Segunda Parte)")
         
-        plt.subplots_adjust(wspace=0.4, hspace=0.6) 
-        plt.show()
+        second_bar(second_half,df)
+
 
 
 
