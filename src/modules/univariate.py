@@ -1,59 +1,60 @@
 import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
+from visualizations.botsplox import firtsbox,secondbox
+from visualizations.histograms import firtshist,secondhist
+from visualizations.barplots import first_bar,second_bar
+
 
 def univariate_analysis(df):
     """
-    Realiza análisis univariado del DataFrame, detecta sesgo y aplica transformaciones si es necesario.
+    Realiza análisis univariado del DataFrame y organiza los gráficos en una cuadrícula con 3 gráficos por fila.
     """
     print("\n=== Análisis Univariado ===")
-    
-    # Análisis de variables numéricas
+
+   # Análisis de variables numéricas
     numerical_cols = df.select_dtypes(include=[np.number]).columns
     if len(numerical_cols) > 0:
-        print("\nVariables Numéricas:")
-        for col in numerical_cols:
-            print(f"\nEstadísticas para {col}:")
-            stats = df[col].describe()
-            print(stats)
-            
-            # Detectar asimetría y curtosis
-            skewness = df[col].skew()
-            kurtosis = df[col].kurtosis()
-            print(f"Asimetría: {skewness:.2f}")
-            print(f"Curtosis: {kurtosis:.2f}")
-            
-            # Comprobar sesgo y aplicar transformaciones si es necesario
-            if abs(skewness) > 1:  # Sesgo alto, aplicar transformación
-                print(f"Transformación aplicada a {col}: Logaritmo")
-                df[col] = np.log1p(df[col])  # Aplicar logaritmo (log(1 + x))
-                print(f"Nuevo sesgo para {col}: {df[col].skew():.2f}")
-            
-            # Crear y mostrar histograma
-            plt.figure(figsize=(10, 6))
-            sns.histplot(data=df, x=col, kde=True)
-            plt.title(f"Distribución de {col}")
-            plt.show()
-            
-            # Crear y mostrar diagrama de caja
-            plt.figure(figsize=(10, 6))
-            sns.boxplot(data=df, x=col)
-            plt.title(f"Diagrama de caja de {col}")
-            plt.show()
-    
+        print("\nPágina 1: Histogramas y KDE (Primera mitad)")
+        
+        # Dividir las columnas numéricas en dos grupos
+        mid_index = len(numerical_cols) // 2
+        first_half = numerical_cols[:mid_index]
+        second_half = numerical_cols[mid_index:]
+
+        firtshist(first_half,df) # Primeros Graficos
+        
+        print("\nPágina 2: Histogramas y KDE (Segunda mitad)")
+
+        secondhist(second_half,df)
+
+        print("\nPágina 2: Diagramas de Caja (Primera mitad)")
+        
+        firtsbox(first_half,df)
+        
+        print("\nPágina 2: Diagramas de Caja (Segunda mitad)")
+      
+        secondbox(second_half,df)
+
+   
+   
     # Análisis de variables categóricas
-    categorical_cols = df.select_dtypes(exclude=[np.number]).columns
+    categorical_cols = df.select_dtypes(include=['category']).columns  # Seleccionamos columnas categóricas
     if len(categorical_cols) > 0:
-        print("\nVariables Categóricas:")
-        for col in categorical_cols:
-            print(f"\nDistribución de frecuencias para {col}:")
-            freq = df[col].value_counts()
-            print(freq)
-            print(f"Número de categorías únicas: {df[col].nunique()}")
-            
-            # Crear y mostrar gráfico de barras
-            plt.figure(figsize=(10, 6))
-            sns.countplot(data=df, x=col)
-            plt.xticks(rotation=45)
-            plt.title(f"Distribución de {col}")
-            plt.show()
+        print("\nPágina 3: Gráficos de Barras (Primera Parte)")
+        
+        # Dividimos las columnas en dos partes
+        half = len(categorical_cols) // 2  # Dividimos por la mitad
+        first_half = categorical_cols[:half]  # Primera mitad
+        second_half = categorical_cols[half:]  # Segunda mitad
+        
+        first_bar(first_half,df)
+        
+        print("\nPágina 3: Gráficos de Barras (Segunda Parte)")
+        
+        second_bar(second_half,df)
+
+
+
+
+

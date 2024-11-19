@@ -107,8 +107,8 @@ def load_and_clean_dataset(url):
         print(df.dtypes)
         print("\nValores nulos restantes:")
         print(df.isnull().sum())
-        visualizer = InteractiveVisualizer(df)
-        visualizer.show() 
+       # visualizer = InteractiveVisualizer(df)
+       # visualizer.show() 
         
         return df, df_original, label_encoders
         

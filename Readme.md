@@ -26,6 +26,7 @@ Para los graficos y diversos calculos
 ```bash
 pip install seaborn matplotlib scipy
 pip install pandas numpy seaborn matplotlib
+$ pip install ipywidgets
 
 ```
 ### Para los puntos número 3 y 4 del proyecto asegurarce de tener:
