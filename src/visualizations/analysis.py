@@ -12,11 +12,12 @@ def perform_analysis(df):
     print("\n=== Iniciando Análisis Exploratorio de Datos ===")
     
     print("\nAnálisis univariado:")
-    # univariate_analysis(df)
+    univariate_analysis(df)
     
     print("\nAnálisis bivariado:")
-    # bivariate_analysis(df)
+    bivariate_analysis(df)
     
+ 
     # Análisis de outliers
     print("\n=== Resumen de Outliers ===")
     outliers = analyze_outliers(df)
