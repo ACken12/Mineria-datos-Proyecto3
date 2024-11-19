@@ -13,7 +13,7 @@ def perform_analysis(df):
     
     print("\nAnálisis univariado:")
     univariate_analysis(df)
-    
+    """"
     print("\nAnálisis bivariado:")
     bivariate_analysis(df)
     
@@ -29,3 +29,4 @@ def perform_analysis(df):
     visualizer = InteractiveVisualizer(df_cleaned)
     
     return visualizer
+    """

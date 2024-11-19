@@ -1,69 +1,63 @@
 import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
+from visualizations.botsplox import firtsbox,secondbox
+from visualizations.histograms import firtshist,secondhist
 
-def univariate_analysis(df, graphs_per_page=4):
+
+def univariate_analysis(df):
     """
-    Realiza análisis univariado del DataFrame y muestra los gráficos en una sola página
-    con botones para navegar entre páginas.
+    Realiza análisis univariado del DataFrame y organiza los gráficos en una cuadrícula con 3 gráficos por fila.
     """
     print("\n=== Análisis Univariado ===")
-    figures = []  # Lista para almacenar las figuras (como imágenes estáticas)
-    
-    # Análisis de variables numéricas
+
+   # Análisis de variables numéricas
     numerical_cols = df.select_dtypes(include=[np.number]).columns
     if len(numerical_cols) > 0:
-        for col in numerical_cols:
-            # Crear histograma
-            fig, ax = plt.subplots(figsize=(10, 6))
-            sns.histplot(data=df, x=col, kde=True, ax=ax)
-            ax.set_title(f"Distribución de {col}")
-            fig.tight_layout()
-            figures.append(fig)  # Añadir figura a la lista
-            plt.close(fig)  # Cerrar la figura para evitar demasiadas abiertas
-            
-            # Crear diagrama de caja
-            fig, ax = plt.subplots(figsize=(10, 6))
-            sns.boxplot(data=df, x=col, ax=ax)
-            ax.set_title(f"Diagrama de caja de {col}")
-            fig.tight_layout()
-            figures.append(fig)  # Añadir figura a la lista
-            plt.close(fig)  # Cerrar la figura para evitar demasiadas abiertas
-    
+        print("\nPágina 1: Histogramas y KDE (Primera mitad)")
+        
+        # Dividir las columnas numéricas en dos grupos
+        mid_index = len(numerical_cols) // 2
+        first_half = numerical_cols[:mid_index]
+        second_half = numerical_cols[mid_index:]
+
+        firtshist(first_half,df) # Primeros Graficos
+        
+        print("\nPágina 2: Histogramas y KDE (Segunda mitad)")
+
+        secondhist(second_half,df)
+
+        print("\nPágina 2: Diagramas de Caja (Primera mitad)")
+        
+        firtsbox(first_half,df)
+        
+        print("\nPágina 2: Diagramas de Caja (Segunda mitad)")
+      
+        secondbox(second_half,df)
+
+
     # Análisis de variables categóricas
-    categorical_cols = df.select_dtypes(exclude=[np.number]).columns
+    categorical_cols = df.select_dtypes(include=[np.number]).columns
     if len(categorical_cols) > 0:
-        for col in categorical_cols:
-            # Crear gráfico de barras
-            fig, ax = plt.subplots(figsize=(10, 6))
-            sns.countplot(data=df, x=col, ax=ax)
-            ax.set_title(f"Distribución de {col}")
-            plt.xticks(rotation=45)
-            fig.tight_layout()
-            figures.append(fig)  # Añadir figura a la lista
-            plt.close(fig)  # Cerrar la figura para evitar demasiadas abiertas
-    
-    # Función para mostrar una página de gráficos
-    def show_page(page_num):
-        start_idx = page_num * graphs_per_page
-        end_idx = start_idx + graphs_per_page
-        figs_to_show = figures[start_idx:end_idx]
+        print("\nPágina 3: Gráficos de Barras")
         
-        # Crear una figura con subgráficos
-        fig, axes = plt.subplots(1, len(figs_to_show), figsize=(15, 5))
+        # Configuración del grid (3 gráficos por fila)
+        rows = (len(categorical_cols) + 2) // 3
+        fig, axes = plt.subplots(rows, 3, figsize=(18, 6 * rows))
+        axes = axes.flatten()
         
-        if len(figs_to_show) == 1:  # Para el caso de que haya solo un gráfico
-            axes = [axes]
+        # Crear gráficos de barras
+        for i, col in enumerate(categorical_cols):
+            sns.countplot(data=df, x=col, ax=axes[i])
+            axes[i].set_title(f"Diagrama de caja de {col}")
         
-        for ax, figure in zip(axes, figs_to_show):
-            ax.imshow(figure.canvas.renderer.buffer_rgba())
-            ax.axis('off')  # Quitar los ejes
+        # Ocultar ejes adicionales si hay menos gráficos que celdas
+        for j in range(i + 1, len(axes)):
+            axes[j].axis("off")
         
+        plt.subplots_adjust(wspace=0.4, hspace=0.6) 
         plt.show()
 
-    # Mostrar la primera página de gráficos
-    current_page = 0
-    show_page(current_page)
-    
-    # Aquí podrías agregar lógica para navegar entre las páginas, por ejemplo:
-    # * Mostrar un botón de "Siguiente" que aumente el número de página y muestre los gráficos siguientes.
+
+
+
