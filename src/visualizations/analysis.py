@@ -14,7 +14,7 @@ def clear_screen():
 
 def print_menu():
     """Imprime el menú principal."""
-    clear_screen()
+    
     print("\n=== MENÚ DE ANÁLISIS DE DATOS ===")
     print("1. Realizar análisis univariado")
     print("2. Realizar análisis bivariado")
