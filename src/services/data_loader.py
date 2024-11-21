@@ -3,7 +3,7 @@ import numpy as np
 from sklearn.preprocessing import LabelEncoder
 from visualizations.analysis import univariate_analysis, bivariate_analysis
 import warnings
-from visualizations.analysis import InteractiveVisualizer
+
 def load_and_clean_dataset(url):
     """
     Lee un archivo CSV desde GitHub y realiza una limpieza completa de los datos.
