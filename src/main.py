@@ -1,4 +1,5 @@
 from services.data_loader import load_and_clean_dataset
+from visualizations.analysis import perform_analysis
 
 
 def main():
@@ -6,9 +7,10 @@ def main():
     df_limpio, df_original, encoders = load_and_clean_dataset(url)
     
     if df_limpio is not None:
-        # Mostrar algunos datos de muestra del resultado
+        # Mostrar algunos datos de muestra del resultadSo
         print("\n=== Muestra de datos procesados ===")
-        print(df_limpio.head())
+        perform_analysis(df_limpio)
+       
 
 if __name__ == "__main__":
     main()
