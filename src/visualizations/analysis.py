@@ -5,6 +5,7 @@ from modules.dataVisualization import data_visualization
 from modules.outliers import analyze_outliers
 from hooks.handleOutliers import handle_outliers
 from classes.DataProcessor import DataProcessor
+from services.data_loader import clean_dataset
 import pandas as pd
 import os
 
@@ -14,13 +15,14 @@ def clear_screen():
 
 def print_menu():
     """Imprime el menú principal."""
-    
+    clear_screen()
     print("\n=== MENÚ DE ANÁLISIS DE DATOS ===")
-    print("1. Realizar análisis univariado")
-    print("2. Realizar análisis bivariado")
-    print("3. Analizar outliers")
-    print("4. Visualizar datos")
-    print("5. Normalizar datos")
+    print("1. Mostrar información del dataset")
+    print("2. Realizar análisis univariado")
+    print("3. Realizar análisis bivariado")
+    print("4. Analizar outliers")
+    print("5. Visualizar datos")
+    print("6. Normalizar datos")
     print("0. Salir")
     print("================================")
 
@@ -37,20 +39,24 @@ def perform_analysis(df):
             if option == "0":
                 print("\n¡Hasta luego!")
                 break
-                
             elif option == "1":
+                clear_screen()
+                print("\n=== INFORMACIÓN DEL DATASET ===")
+                clean_dataset(df)
+                wait_for_user() 
+            elif option == "2":
                 clear_screen()
                 print("\n=== ANÁLISIS UNIVARIADO ===")
                 univariate_analysis(df)
                 wait_for_user()
                 
-            elif option == "2":
+            elif option == "3":
                 clear_screen()
                 print("\n=== ANÁLISIS BIVARIADO ===")
                 bivariate_analysis(df)
                 wait_for_user()
                 
-            elif option == "3":
+            elif option == "4":
                 clear_screen()
                 print("\n=== ANÁLISIS DE OUTLIERS ===")
                 outliers = analyze_outliers(df)
@@ -64,11 +70,13 @@ def perform_analysis(df):
                     print("\nOutliers manejados exitosamente.")
                 wait_for_user()
                 
-            elif option == "4":
+            elif option == "5":
+                clear_screen()
                 print("\n=== VISUALIZACIÓN DE DATOS ===")
                 data_visualization(df)
                 
-            elif option == "5":
+            elif option == "6":
+                clear_screen()
                 print("\n=== NORMALIZACIÓN DE DATOS ===")
                 processor = DataProcessor(df)
                 datos_procesados = processor.process_data()
@@ -82,12 +90,4 @@ def perform_analysis(df):
                     print(f"\nColumna: {columna}")
                     for metrica, valor in estadisticas.items():
                         print(f"    {metrica}: {valor:.4f}")
-                
-                save_option = input("\n¿Desea guardar los datos normalizados? (s/n): ")
-                if save_option.lower() == 's':
-                    filename = input("Ingrese el nombre del archivo (default: 'datos_procesados.csv'): ")
-                    if not filename:
-                        filename = 'datos_procesados.csv'
-                    datos_procesados.to_csv(filename, index=False)
-                    print(f"\nDatos guardados en {filename}")
                 wait_for_user()

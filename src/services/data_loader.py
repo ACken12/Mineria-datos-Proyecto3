@@ -1,12 +1,11 @@
 import pandas as pd
 import numpy as np
 from sklearn.preprocessing import LabelEncoder
-from visualizations.analysis import univariate_analysis, bivariate_analysis
-import warnings
 
-def load_and_clean_dataset(url):
+def load_dataset(url):
     """
-    Lee un archivo CSV desde GitHub y realiza una limpieza completa de los datos.
+    Lee un archivo CSV desde GitHub y retorna el DataFrame.
+
     """
     # Convertir la URL normal de GitHub a la URL raw
     raw_url = url.replace('github.com', 'raw.githubusercontent.com')
@@ -15,9 +14,27 @@ def load_and_clean_dataset(url):
     try:
         # Leer el CSV con pandas
         df = pd.read_csv(raw_url)
-        
-        # Guardar una copia del DataFrame original
         df_original = df.copy()
+        # Retornamos None como tercer elemento para mantener consistencia con clean_dataset
+        return df, df_original, None
+        
+    except Exception as e:
+        print(f"Error al cargar el archivo: {e}")
+        return None, None, None
+
+def clean_dataset(df, df_original=None):
+    """
+    Realiza una limpieza completa del DataFrame.
+    
+    """
+    if df is None:
+        return None, None, None
+    
+    try:
+        # Crear copia para no modificar el original si no se proporciona uno
+        if df_original is None:
+            df_original = df.copy()
+        df = df.copy()
         
         # 1. Mostrar información inicial
         print("=== Información inicial del dataset ===")
@@ -28,6 +45,8 @@ def load_and_clean_dataset(url):
         print(df.dtypes)
         print("\nValores nulos por columna:")
         print(df.isnull().sum())
+        print("\nPrimeras 5 filas del dataset:")
+        print(df.head())
         
         # 2. Cambiar nombres de columnas
         df.columns = df.columns.str.lower().str.replace(' ', '_')
@@ -73,7 +92,6 @@ def load_and_clean_dataset(url):
         
         # 6. Convertir tipos de datos
         print("\n=== Conversión de tipos de datos ===")
-        # Lista de columnas que probablemente contengan fechas
         posibles_fechas = [col for col in df.columns if any(x in col.lower() for x in ['fecha', 'date', 'time'])]
         
         if posibles_fechas:
@@ -97,8 +115,6 @@ def load_and_clean_dataset(url):
                 label_encoders[col] = LabelEncoder()
                 df[col] = label_encoders[col].fit_transform(df[col])
                 print("  Valores codificados:", np.unique(df[col]))
-
-        
         
         # 8. Mostrar información final
         print("\n=== Información final del dataset ===")
@@ -107,11 +123,11 @@ def load_and_clean_dataset(url):
         print(df.dtypes)
         print("\nValores nulos restantes:")
         print(df.isnull().sum())
-       # visualizer = InteractiveVisualizer(df)
-       # visualizer.show() 
+        print("\nPrimeras 5 filas del dataset limpio:")
+        print(df.head())
         
         return df, df_original, label_encoders
         
     except Exception as e:
-        print(f"Error al procesar el archivo: {e}")
+        print(f"Error al limpiar el dataset: {e}")
         return None, None, None
