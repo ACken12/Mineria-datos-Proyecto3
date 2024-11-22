@@ -33,7 +33,8 @@ def main():
 
     if df_limpio is not None:
         # Mostrar algunos datos de muestra del resultados
-        perform_analysis(df_limpio)
+        perform_analysis(df_limpio,df_original)
+
        
 
 if __name__ == "__main__":

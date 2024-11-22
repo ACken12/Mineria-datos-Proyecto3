@@ -30,7 +30,7 @@ def wait_for_user():
     """Espera a que el usuario presione Enter para continuar."""
     input("\nPresione Enter para continuar...")
 
-def perform_analysis(df):
+def perform_analysis(df, dfOriginal):
         """Maneja el menú interactivo para el análisis de datos."""
         while True:
             print_menu()
@@ -42,7 +42,7 @@ def perform_analysis(df):
             elif option == "1":
                 clear_screen()
                 print("\n=== INFORMACIÓN DEL DATASET ===")
-                clean_dataset(df)
+                clean_dataset(dfOriginal)
                 wait_for_user() 
             elif option == "2":
                 clear_screen()
