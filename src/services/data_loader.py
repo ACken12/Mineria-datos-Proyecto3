@@ -35,7 +35,13 @@ def clean_dataset(df, df_original=None):
         if df_original is None:
             df_original = df.copy()
         df = df.copy()
-        
+        """
+        Examples: How to rename the columns, if you want to rename some columns
+        , you can use this method
+        """
+        # df = pd.DataFrame({"A": [1, 2, 3], "B": [4, 5, 6]})
+        # df.rename(columns={"A": "a", "B": "c"})
+
         # 1. Mostrar información inicial
         print("=== Información inicial del dataset ===")
         print(f"\nDimensiones del dataset: {df.shape}")
