@@ -37,3 +37,7 @@ $ pip install ipywidgets
 
 > [!IMPORTANT]
 > Realizar un pull para obtener todos los cambios realizados
+
+
+> [!IMPORTANT]
+> Para poder entender este codigo debes tomarte el tiempo de leer esta documentación [Pandas Api](https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.rename.html)
