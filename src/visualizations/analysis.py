@@ -59,14 +59,14 @@ def perform_analysis(df, dfOriginal):
             elif option == "4":
                 clear_screen()
                 print("\n=== ANÁLISIS DE OUTLIERS ===")
-                outliers = analyze_outliers(df)
+                analyze_outliers(df)
                 print("\n¿Desea manejar los outliers detectados?")
                 print("1. Sí")
                 print("2. No")
                 handle_option = input("\nSeleccione una opción (1-2): ")
                 
                 if handle_option == "1":
-                    df_cleaned = handle_outliers(outliers, method='iqr')
+                    handle_outliers(df, method='iqr')
                     print("\nOutliers manejados exitosamente.")
                 wait_for_user()
                 
