@@ -34,7 +34,7 @@ def perform_analysis(df, dfOriginal):
         """Maneja el menú interactivo para el análisis de datos."""
         while True:
             print_menu()
-            option = input("\nSeleccione una opción (0-6): ")
+            option = input("\nSeleccione una opción (0-6): ").strip()
             
             if option == "0":
                 print("\n¡Hasta luego!")
@@ -91,3 +91,4 @@ def perform_analysis(df, dfOriginal):
                     for metrica, valor in estadisticas.items():
                         print(f"    {metrica}: {valor:.4f}")
                 wait_for_user()
+

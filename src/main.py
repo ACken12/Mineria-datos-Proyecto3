@@ -35,7 +35,5 @@ def main():
         # Mostrar algunos datos de muestra del resultados
         perform_analysis(df_limpio,df_original)
 
-       
-
 if __name__ == "__main__":
     main()

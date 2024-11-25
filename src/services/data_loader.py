@@ -2,6 +2,28 @@ import pandas as pd
 import numpy as np
 from sklearn.preprocessing import LabelEncoder
 
+"""
+CustomerChurn -  para representar si un cliente se da de baja.
+AccountLength - Duración de la cuenta.
+HasInternationalPlan - Indica si tiene un plan internacional.
+HasVoicemailPlan - Indica si tiene un plan de correo de voz.
+VoicemailMessageCount - Número de mensajes de correo de voz.
+DayMinutes - Minutos utilizados durante el día.
+DayCalls - Llamadas realizadas durante el día.
+DayCharges - Costos totales de llamadas diurnas.
+EveningMinutes - Minutos utilizados durante la tarde/noche.
+EveningCalls - Llamadas realizadas durante la tarde/noche.
+EveningCharges - Costos totales de llamadas nocturnas.
+NightMinutes - Minutos utilizados durante la noche.
+NightCalls - Llamadas realizadas durante la noche.
+NightCharges - Costos totales de llamadas nocturnas.
+InternationalMinutesCalls - Minutos utilizados en llamadas internacionales.
+InternationalCalls - Llamadas internacionales realizadas.
+InternationalCharges - Costos de llamadas internacionales.
+CustomerServiceCalls - Número de llamadas al servicio al cliente.
+
+"""
+
 def load_dataset(url):
     """
     Lee un archivo CSV desde GitHub y retorna el DataFrame.
@@ -14,6 +36,28 @@ def load_dataset(url):
     try:
         # Leer el CSV con pandas
         df = pd.read_csv(raw_url)
+        df.rename(columns=
+        {
+        "churn": "CustomerChurn", 
+        "accountlength": "AccountLength",
+        "internationalplan" : "HasInternationalPlan",
+        "voicemailplan": "HasVoicemailPlan",
+        "numbervmailmessages": "VoicemailMessageCount",
+        "totaldayminutes": "DayMinutes",
+        "totaldaycalls": "DayCalls",
+        "totaldaycharge": "DayCharges",
+        "totaleveminutes":"EveningMinutes",
+        "totalevecalls" : "EveningCalls",
+        "totalevecharge": "EveningCharges",
+        "totalnightminutes" : "NightMinutes",
+        "totalnightcalls" : "NightCalls",
+        "totalnightcharge" : "NightCharges",
+        "totalintlminutes" : "InternationalMinutesCalls",
+        "totalintlcalls": "InternationalCalls",
+        "totalintlcharge" : "InternationalCharges",
+        "numbercustomerservicecalls":"CustomerServiceCalls"
+        }, 
+        inplace=True)
         df_original = df.copy()
         # Retornamos None como tercer elemento para mantener consistencia con clean_dataset
         return df, df_original, None
@@ -35,6 +79,9 @@ def clean_dataset(df, df_original=None):
         if df_original is None:
             df_original = df.copy()
         df = df.copy()
+
+
+
         """
         Examples: How to rename the columns, if you want to rename some columns
         , you can use this method
@@ -55,7 +102,7 @@ def clean_dataset(df, df_original=None):
         print(df.head())
         
         # 2. Cambiar nombres de columnas
-        df.columns = df.columns.str.lower().str.replace(' ', '_')
+        df.columns = df.columns.str.replace(' ', '_')
         
         # 3. Eliminar duplicados
         duplicados_originales = df.duplicated().sum()
@@ -113,15 +160,48 @@ def clean_dataset(df, df_original=None):
         print("\n=== Codificación de variables categóricas ===")
         label_encoders = {}
         columnas_categoricas = df.select_dtypes(include=['object']).columns
-        
+        columnas_binarias = ['CustomerChurn','HasInternationalPlan', 'HasVoicemailPlan']
+    
         for col in columnas_categoricas:
             if not pd.api.types.is_datetime64_any_dtype(df[col]):
                 print(f"\nColumna '{col}':")
                 print("  Valores únicos originales:", df[col].unique())
-                label_encoders[col] = LabelEncoder()
-                df[col] = label_encoders[col].fit_transform(df[col])
-                print("  Valores codificados:", np.unique(df[col]))
-        
+                
+                # Primero limpiamos y estandarizamos los valores
+                df[col] = df[col].astype(str).str.strip().str.lower()
+                
+                # Si la columna es binaria (yes/no)
+                if col in columnas_binarias:
+                    # Creamos un mapping más completo para manejar diferentes casos
+                    mapping = {
+                        'yes': 1,
+                        'no': 0,
+                        'y': 1,
+                        'n': 0,
+                        'true': 1,
+                        'false': 0,
+                        '1': 1,
+                        '0': 0
+                    }
+                    
+                    # Aplicamos la transformación y manejamos valores no encontrados
+                    df[col] = df[col].map(mapping)
+                    
+                    # Verificamos si hay valores que no se pudieron mapear
+                    valores_no_mapeados = df[col].isna().sum()
+                    if valores_no_mapeados > 0:
+                        print(f"  Advertencia: {valores_no_mapeados} valores no pudieron ser mapeados en '{col}'")
+                    
+                    # Convertimos a entero (los NA se convertirán en 0)
+                    df[col] = df[col].fillna(0).astype(int)
+                    print(f"  Valores codificados para {col}:", np.unique(df[col]))
+                
+                else:
+                    # Para el resto de variables categóricas usamos LabelEncoder
+                    label_encoders[col] = LabelEncoder()
+                    df[col] = label_encoders[col].fit_transform(df[col])
+                    print(f"  Valores codificados para {col}:", np.unique(df[col]))
+
         # 8. Mostrar información final
         print("\n=== Información final del dataset ===")
         print(f"\nDimensiones finales: {df.shape}")
@@ -130,8 +210,7 @@ def clean_dataset(df, df_original=None):
         print("\nValores nulos restantes:")
         print(df.isnull().sum())
         print("\nPrimeras 5 filas del dataset limpio:")
-        print(df.head())
-        
+        print(df.head(12))
         return df, df_original, label_encoders
         
     except Exception as e:
